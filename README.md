@@ -355,3 +355,4 @@ Named as absent rather than implied as present:
   file.
 - **Persistence.** The database is `:memory:` on purpose; nothing survives a restart,
   which is the right trade for a demo and the wrong one for a deployment.
+# coummutesense
