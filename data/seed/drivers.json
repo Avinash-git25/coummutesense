@@ -1,0 +1,13 @@
+[
+  { "_id": "DRV_882", "name": "R. Kulkarni",  "shiftStartedAt": "2026-08-27T04:30:00.000Z", "hoursOnDuty": 7.5, "safetyScore": 71 },
+  { "_id": "DRV_814", "name": "S. Iyer",      "shiftStartedAt": "2026-08-27T07:00:00.000Z", "hoursOnDuty": 5.0, "safetyScore": 88 },
+  { "_id": "DRV_701", "name": "A. Deshmukh",  "shiftStartedAt": "2026-08-27T08:15:00.000Z", "hoursOnDuty": 3.7, "safetyScore": 92 },
+  { "_id": "DRV_733", "name": "M. Pawar",     "shiftStartedAt": "2026-08-27T06:00:00.000Z", "hoursOnDuty": 6.0, "safetyScore": 84 },
+  { "_id": "DRV_640", "name": "V. Naik",      "shiftStartedAt": "2026-08-27T09:00:00.000Z", "hoursOnDuty": 2.9, "safetyScore": 90 },
+  { "_id": "DRV_655", "name": "P. Shetty",    "shiftStartedAt": "2026-08-27T05:45:00.000Z", "hoursOnDuty": 6.2, "safetyScore": 79 },
+  { "_id": "DRV_590", "name": "K. Rane",      "shiftStartedAt": "2026-08-27T08:30:00.000Z", "hoursOnDuty": 3.4, "safetyScore": 95 },
+  { "_id": "DRV_611", "name": "T. Gaikwad",   "shiftStartedAt": "2026-08-27T10:00:00.000Z", "hoursOnDuty": 1.8, "safetyScore": 91 },
+  { "_id": "DRV_402", "name": "N. Bhosale",   "shiftStartedAt": "2026-08-27T06:30:00.000Z", "hoursOnDuty": 5.6, "safetyScore": 86 },
+  { "_id": "DRV_418", "name": "J. Chavan",    "shiftStartedAt": "2026-08-27T07:45:00.000Z", "hoursOnDuty": 4.3, "safetyScore": 83 },
+  { "_id": "DRV_620", "name": "H. Salvi",     "shiftStartedAt": "2026-08-27T10:15:00.000Z", "hoursOnDuty": 1.5, "safetyScore": 89 }
+]

@@ -1,0 +1,14 @@
+{
+  "name": "commuteiq",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CommuteIQ — AI-assisted city transit pressure console (SIH 2026, PS 26205)",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test test/"
+  }
+}

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CommuteIQ · City Transit Pressure Console</title>
+<meta name="description" content="CommuteIQ — AI-assisted transit pressure monitoring, predictive ETAs, unified ticketing and automated fleet dispatch. SIH 2026, problem statement 26205.">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230b1220'/><path d='M8 21V11h4.5a3.5 3.5 0 0 1 0 7H8m10-7v10m0-10h5' stroke='%2338e8c8' stroke-width='2.4' fill='none' stroke-linecap='round'/></svg>">
+</head>
+<body>
+
+<!-- ─── header: identity, live clock, scenario beat, impact KPIs ─────────── -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="26" height="26"><path d="M8 21V11h4.5a3.5 3.5 0 0 1 0 7H8m10-7v10m0-10h5" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>
+    </span>
+    <span class="brand-text">
+      <strong>CommuteIQ</strong>
+      <small>PS 26205 · City Resources &amp; Transit Pressure</small>
+    </span>
+  </div>
+
+  <div class="scenario" role="status" aria-live="polite">
+    <span class="scenario-dot" id="scenario-dot"></span>
+    <span class="scenario-beat" id="scenario-beat">connecting…</span>
+    <span class="scenario-step" id="scenario-step"></span>
+  </div>
+
+  <div class="kpis" id="kpis">
+    <div class="kpi"><span class="kpi-val" id="kpi-occupancy">—</span><span class="kpi-lab">network load</span></div>
+    <div class="kpi"><span class="kpi-val" id="kpi-waiting">—</span><span class="kpi-lab">waiting</span></div>
+    <div class="kpi"><span class="kpi-val" id="kpi-seats">—</span><span class="kpi-lab">seats added</span></div>
+    <div class="kpi"><span class="kpi-val" id="kpi-co2">—</span><span class="kpi-lab">kg CO₂ saved</span></div>
+  </div>
+
+  <div class="topbar-actions">
+    <span class="conn" id="conn" title="live event stream">
+      <span class="conn-dot"></span><span id="conn-text">offline</span>
+    </span>
+    <button class="btn btn-ghost" id="btn-help" type="button" aria-keyshortcuts="?">Keys</button>
+    <button class="btn btn-ghost" id="btn-reset" type="button" aria-keyshortcuts="R">Reset</button>
+  </div>
+</header>
+
+<!-- ─── alert rail: pushed over SSE from Feature 1 / Feature 5 ───────────── -->
+<div class="alert-rail" id="alert-rail" role="log" aria-live="assertive" aria-label="Operational alerts"></div>
+
+<main class="grid">
+
+  <!-- ═══ Feature 1 — computer vision passenger density ═══════════════════ -->
+  <section class="panel panel-cv" aria-labelledby="h-cv">
+    <div class="panel-head">
+      <h2 id="h-cv"><span class="fnum">1</span> Passenger Density · Computer Vision</h2>
+      <div class="panel-head-right">
+        <select id="cv-stop" class="select" aria-label="Camera location"></select>
+      </div>
+    </div>
+
+    <div class="cv-stage">
+      <canvas id="cv-canvas" width="640" height="360" aria-label="Transit node camera feed with detection overlay"></canvas>
+      <div class="cv-hud">
+        <span class="cv-badge" id="cv-density">—</span>
+        <span class="cv-count"><b id="cv-count">0</b> detected</span>
+      </div>
+      <div class="cv-tag" id="cv-tag">classical CV · on-device</div>
+    </div>
+
+    <div class="cv-stats">
+      <div class="stat"><span class="stat-lab">Occupancy</span><span class="stat-val" id="cv-occ">—</span></div>
+      <div class="stat"><span class="stat-lab">Ground truth</span><span class="stat-val" id="cv-truth">—</span></div>
+      <div class="stat"><span class="stat-lab">Accuracy ±1</span><span class="stat-val" id="cv-acc">—</span></div>
+      <div class="stat"><span class="stat-lab">Inference</span><span class="stat-val" id="cv-ms">—</span></div>
+    </div>
+
+    <div class="cv-controls">
+      <label class="switch"><input type="checkbox" id="cv-boxes" checked><span>Boxes</span></label>
+      <label class="switch"><input type="checkbox" id="cv-mask"><span>FG mask</span></label>
+      <label class="switch"><input type="checkbox" id="cv-privacy" checked><span>Privacy blur</span></label>
+      <p class="note">Counts only are stored — never frames or faces.</p>
+    </div>
+  </section>
+
+  <!-- ═══ Feature 2 — live map + predictive ETA ═══════════════════════════ -->
+  <section class="panel panel-map" aria-labelledby="h-map">
+    <div class="panel-head">
+      <h2 id="h-map"><span class="fnum">2</span> Live Network &amp; Predictive ETA</h2>
+      <div class="panel-head-right">
+        <select id="eta-weather" class="select" aria-label="Weather condition">
+          <option value="clear">Clear</option>
+          <option value="cloudy">Cloudy</option>
+          <option value="rain" selected>Rain</option>
+          <option value="heavy_rain">Heavy rain</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="map-stage">
+      <svg id="map-svg" viewBox="0 0 1000 620" role="img" aria-label="City transit network map"></svg>
+      <div class="map-legend" id="map-legend"></div>
+    </div>
+
+    <div class="eta-block">
+      <div class="eta-head">
+        <select id="eta-stop" class="select" aria-label="Destination station"></select>
+        <span class="eta-conf" id="eta-conf"></span>
+      </div>
+      <div id="eta-list" class="eta-list"></div>
+    </div>
+  </section>
+
+  <!-- ═══ Feature 4 — fleet dispatch console ═════════════════════════════ -->
+  <section class="panel panel-fleet" aria-labelledby="h-fleet">
+    <div class="panel-head">
+      <h2 id="h-fleet"><span class="fnum">4</span> Fleet Stress &amp; Dispatch</h2>
+      <div class="panel-head-right">
+        <span class="pill" id="fleet-idle">— idle</span>
+      </div>
+    </div>
+
+    <div id="fleet-heat" class="fleet-heat"></div>
+
+    <div class="dispatch" id="dispatch">
+      <div class="dispatch-empty" id="dispatch-empty">No dispatch recommended. Network within capacity.</div>
+      <div class="dispatch-live" id="dispatch-live" hidden>
+        <p class="dispatch-why" id="dispatch-why"></p>
+        <div class="dispatch-row">
+          <select id="dispatch-vehicle" class="select" aria-label="Idle vehicle to dispatch"></select>
+          <select id="dispatch-route" class="select" aria-label="Target route"></select>
+          <button class="btn btn-primary" id="btn-reroute" type="button">Re-Route Bus</button>
+        </div>
+        <p class="dispatch-result" id="dispatch-result" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Feature 3 — multi-modal plan + universal QR pass ═══════════════ -->
+  <section class="panel panel-journey" aria-labelledby="h-journey">
+    <div class="panel-head">
+      <h2 id="h-journey"><span class="fnum">3</span> Multi-Modal Journey &amp; Universal Pass</h2>
+    </div>
+
+    <div class="journey-form">
+      <select id="jny-from" class="select" aria-label="From stop"></select>
+      <span class="arrow" aria-hidden="true">→</span>
+      <select id="jny-to" class="select" aria-label="To stop"></select>
+      <select id="jny-type" class="select" aria-label="Passenger type">
+        <option value="adult">Adult</option>
+        <option value="student">Student</option>
+        <option value="senior">Senior</option>
+        <option value="child">Child</option>
+      </select>
+      <label class="switch"><input type="checkbox" id="jny-avoid"><span>Avoid crowding</span></label>
+      <button class="btn btn-primary" id="btn-plan" type="button">Plan</button>
+    </div>
+
+    <ol id="jny-legs" class="legs" aria-live="polite"></ol>
+
+    <div class="journey-summary" id="jny-summary" hidden>
+      <div class="stat"><span class="stat-lab">Distance</span><span class="stat-val" id="jny-km">—</span></div>
+      <div class="stat"><span class="stat-lab">Duration</span><span class="stat-val" id="jny-mins">—</span></div>
+      <div class="stat"><span class="stat-lab">Fare</span><span class="stat-val" id="jny-fare">—</span></div>
+      <div class="stat"><span class="stat-lab">CO₂ saved</span><span class="stat-val" id="jny-co2">—</span></div>
+      <button class="btn btn-accent" id="btn-pass" type="button">Generate Pass</button>
+    </div>
+  </section>
+
+  <!-- ═══ Feature 5 — driver telematics + drowsiness ═════════════════════ -->
+  <section class="panel panel-tele" aria-labelledby="h-tele">
+    <div class="panel-head">
+      <h2 id="h-tele"><span class="fnum">5</span> Driver Telematics &amp; Fatigue</h2>
+      <div class="panel-head-right">
+        <select id="tele-vehicle" class="select" aria-label="Vehicle"></select>
+      </div>
+    </div>
+
+    <div class="tele-alert" id="tele-alert" hidden role="alert">
+      <strong>DROWSINESS ALERT</strong>
+      <span id="tele-alert-detail"></span>
+    </div>
+
+    <div class="gauges">
+      <div class="gauge"><span class="gauge-val" id="tele-speed">—</span><span class="gauge-lab">km/h</span></div>
+      <div class="gauge"><span class="gauge-val" id="tele-brake">—</span><span class="gauge-lab">harsh brakes</span></div>
+      <div class="gauge"><span class="gauge-val" id="tele-stab">—</span><span class="gauge-lab">stability</span></div>
+      <div class="gauge"><span class="gauge-val" id="tele-hours">—</span><span class="gauge-lab">h on duty</span></div>
+    </div>
+
+    <div class="ear">
+      <div class="ear-head">
+        <span>Eye Aspect Ratio</span>
+        <span class="ear-now" id="tele-ear">—</span>
+      </div>
+      <canvas id="ear-chart" width="520" height="90" aria-label="Eye aspect ratio over time"></canvas>
+      <div class="ear-foot">
+        <span>alert threshold <b id="ear-thresh">—</b></span>
+        <span class="ear-progress"><i id="ear-fill"></i></span>
+        <span id="ear-sustain">0 ms sustained</span>
+      </div>
+      <label class="slider">
+        <span>Fatigue simulator</span>
+        <input type="range" id="ear-sim" min="0.08" max="0.35" step="0.005" value="0.28">
+      </label>
+      <p class="note">Simulated EAR signal, per PRD Feature 5. Threshold and sustained-closure logic are live.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ─── QR pass modal ───────────────────────────────────────────────────── -->
+<div class="modal" id="pass-modal" hidden role="dialog" aria-modal="true" aria-labelledby="pass-title">
+  <div class="modal-card">
+    <button class="modal-close" id="pass-close" type="button" aria-label="Close">×</button>
+    <h3 id="pass-title">Universal Journey Pass</h3>
+    <p class="pass-route" id="pass-route"></p>
+
+    <div class="pass-qr">
+      <canvas id="pass-canvas" width="264" height="264" aria-label="Journey pass QR code"></canvas>
+    </div>
+
+    <dl class="pass-meta">
+      <div><dt>Pass</dt><dd id="pass-id">—</dd></div>
+      <div><dt>Legs</dt><dd id="pass-legs">—</dd></div>
+      <div><dt>Fare</dt><dd id="pass-fare">—</dd></div>
+      <div><dt>Valid until</dt><dd id="pass-exp">—</dd></div>
+    </dl>
+
+    <div class="pass-verify">
+      <button class="btn btn-primary" id="btn-verify" type="button">Scan at gate</button>
+      <p class="pass-verdict" id="pass-verdict" role="status" aria-live="polite"></p>
+    </div>
+    <p class="note">Single use — HMAC-signed. Scanning twice is refused, which is the fare-evasion control.</p>
+  </div>
+</div>
+
+<!-- ─── keyboard help ───────────────────────────────────────────────────── -->
+<div class="modal" id="help-modal" hidden role="dialog" aria-modal="true" aria-labelledby="help-title">
+  <div class="modal-card modal-card-sm">
+    <button class="modal-close" id="help-close" type="button" aria-label="Close">×</button>
+    <h3 id="help-title">Demo controls</h3>
+    <dl class="keys">
+      <div><dt>1</dt><dd>City nominal</dd></div>
+      <div><dt>2</dt><dd>Crowd building</dd></div>
+      <div><dt>3</dt><dd>Overcrowding detected</dd></div>
+      <div><dt>4</dt><dd>Extra bus dispatched</dd></div>
+      <div><dt>5</dt><dd>Driver fatigue</dd></div>
+      <div><dt>6</dt><dd>Network stable</dd></div>
+      <div><dt>Space</dt><dd>Pause / resume</dd></div>
+      <div><dt>R</dt><dd>Reset the whole demo</dd></div>
+      <div><dt>?</dt><dd>This panel</dd></div>
+    </dl>
+    <p class="note">The scenario is scripted so the crowding-to-dispatch chain can be replayed on request.</p>
+  </div>
+</div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

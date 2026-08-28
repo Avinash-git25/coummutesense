@@ -1,0 +1,12 @@
+[
+  { "_id": "ST_01", "name": "Central Station",  "lat": 19.0760, "lng": 72.8777, "capacity": 22, "modes": ["bus", "metro"],      "zone": "core" },
+  { "_id": "ST_02", "name": "IT Park",          "lat": 19.0880, "lng": 72.8890, "capacity": 18, "modes": ["bus", "erickshaw"], "zone": "tech" },
+  { "_id": "ST_03", "name": "Bandra Junction",  "lat": 19.0544, "lng": 72.8402, "capacity": 20, "modes": ["bus", "metro"],      "zone": "west" },
+  { "_id": "ST_04", "name": "Andheri Metro",    "lat": 19.1197, "lng": 72.8464, "capacity": 30, "modes": ["bus", "metro"],      "zone": "north" },
+  { "_id": "ST_05", "name": "Powai Lake",       "lat": 19.1273, "lng": 72.9048, "capacity": 12, "modes": ["bus", "erickshaw"], "zone": "east" },
+  { "_id": "ST_06", "name": "Airport T2",       "lat": 19.0896, "lng": 72.8656, "capacity": 25, "modes": ["bus", "metro"],      "zone": "north" },
+  { "_id": "ST_07", "name": "University Gate",  "lat": 19.0330, "lng": 72.8560, "capacity": 16, "modes": ["bus", "erickshaw"], "zone": "west" },
+  { "_id": "ST_08", "name": "Marine Drive",     "lat": 18.9440, "lng": 72.8230, "capacity": 14, "modes": ["bus"],              "zone": "south" },
+  { "_id": "ST_09", "name": "Dadar Hub",        "lat": 19.0180, "lng": 72.8440, "capacity": 28, "modes": ["bus", "metro"],      "zone": "core" },
+  { "_id": "ST_10", "name": "Ghatkopar Depot",  "lat": 19.0860, "lng": 72.9080, "capacity": 20, "modes": ["bus"],              "zone": "east" }
+]

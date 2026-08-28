@@ -1,0 +1,14 @@
+[
+  { "_id": "BUS_101", "routeId": "route_104", "driverId": "DRV_882", "capacity": 40, "onboard": 35, "status": "in_service", "progress": 0.18, "speedKmph": 48 },
+  { "_id": "BUS_102", "routeId": "route_104", "driverId": "DRV_814", "capacity": 40, "onboard": 36, "status": "in_service", "progress": 0.63, "speedKmph": 41 },
+  { "_id": "BUS_103", "routeId": "route_102", "driverId": "DRV_701", "capacity": 40, "onboard": 22, "status": "in_service", "progress": 0.35, "speedKmph": 52 },
+  { "_id": "BUS_104", "routeId": "route_102", "driverId": "DRV_733", "capacity": 40, "onboard": 21, "status": "in_service", "progress": 0.80, "speedKmph": 46 },
+  { "_id": "BUS_105", "routeId": "route_106", "driverId": "DRV_640", "capacity": 32, "onboard": 13, "status": "in_service", "progress": 0.12, "speedKmph": 38 },
+  { "_id": "BUS_106", "routeId": "route_106", "driverId": "DRV_655", "capacity": 32, "onboard": 14, "status": "in_service", "progress": 0.57, "speedKmph": 44 },
+  { "_id": "BUS_107", "routeId": "route_108", "driverId": "DRV_590", "capacity": 32, "onboard": 11, "status": "in_service", "progress": 0.44, "speedKmph": 35 },
+  { "_id": "BUS_108", "routeId": null,        "driverId": "DRV_611", "capacity": 40, "onboard": 0,  "status": "idle",       "progress": 0,    "speedKmph": 0,  "depotStopId": "ST_10" },
+  { "_id": "BUS_109", "routeId": "route_110", "driverId": "DRV_402", "capacity": 40, "onboard": 25, "status": "in_service", "progress": 0.27, "speedKmph": 50 },
+  { "_id": "BUS_110", "routeId": "route_110", "driverId": "DRV_418", "capacity": 40, "onboard": 24, "status": "in_service", "progress": 0.71, "speedKmph": 47 },
+  { "_id": "BUS_111", "routeId": null,        "driverId": "DRV_620", "capacity": 32, "onboard": 0,  "status": "idle",       "progress": 0,    "speedKmph": 0,  "depotStopId": "ST_04" },
+  { "_id": "BUS_112", "routeId": null,        "driverId": null,      "capacity": 40, "onboard": 0,  "status": "maintenance","progress": 0,    "speedKmph": 0,  "depotStopId": "ST_10" }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "_id": "route_104",
+    "routeName": "Route 104 - City Center to Tech Hub",
+    "stopIds": ["ST_01", "ST_09", "ST_03", "ST_02"],
+    "activeVehicles": ["BUS_101", "BUS_102"],
+    "currentDemand": 88,
+    "headwayMins": 8,
+    "signalCongestionScore": 0.72
+  },
+  {
+    "_id": "route_102",
+    "routeName": "Route 102 - Airport Link",
+    "stopIds": ["ST_01", "ST_06", "ST_04"],
+    "activeVehicles": ["BUS_103", "BUS_104"],
+    "currentDemand": 54,
+    "headwayMins": 12,
+    "signalCongestionScore": 0.44
+  },
+  {
+    "_id": "route_106",
+    "routeName": "Route 106 - Coastal Line",
+    "stopIds": ["ST_08", "ST_01", "ST_09"],
+    "activeVehicles": ["BUS_105", "BUS_106"],
+    "currentDemand": 41,
+    "headwayMins": 15,
+    "signalCongestionScore": 0.31
+  },
+  {
+    "_id": "route_108",
+    "routeName": "Route 108 - University Shuttle",
+    "stopIds": ["ST_07", "ST_03", "ST_02"],
+    "activeVehicles": ["BUS_107"],
+    "currentDemand": 33,
+    "headwayMins": 20,
+    "signalCongestionScore": 0.25
+  },
+  {
+    "_id": "route_110",
+    "routeName": "Route 110 - Eastern Express",
+    "stopIds": ["ST_10", "ST_05", "ST_02"],
+    "activeVehicles": ["BUS_109", "BUS_110"],
+    "currentDemand": 62,
+    "headwayMins": 10,
+    "signalCongestionScore": 0.58
+  }
+]
