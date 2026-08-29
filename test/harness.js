@@ -78,7 +78,9 @@ class MockResponse {
  */
 export function call(app, method, path, body) {
   return new Promise((resolve, reject) => {
-    const payload = body === undefined ? null : JSON.stringify(body);
+    // Objects model normal JSON clients; a string is treated as an already
+    // serialized payload so malformed-body behavior can be tested too.
+    const payload = body === undefined ? null : typeof body === 'string' ? body : JSON.stringify(body);
 
     const req = Readable.from(payload === null ? [] : [Buffer.from(payload)]);
     req.method = method;

@@ -208,6 +208,12 @@ export function createApp({ location = ':memory:', startSim = true } = {}) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    // These are safe for the offline console and prevent common browser-side
+    // surprises when the demo is exposed on a LAN for phone scanning.
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
 
     try {

@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node server/index.js",
-    "test": "node --test test/"
+    "test": "node --test 'test/*.test.js'",
+    "check": "node --check server/index.js && node --check server/api/*.js && node --check web/js/*.js && npm test"
   }
 }
