@@ -105,6 +105,33 @@ export const api = {
   }),
 };
 
+/** Pull current Mumbai conditions without making boot dependent on the network. */
+export async function refreshLiveWeather() {
+  const status = $('#live-weather');
+  if (status) status.textContent = 'weather syncing…';
+  try {
+    const result = await api.get('/api/v1/live/weather');
+    const weather = result.weather;
+    state.liveWeather = weather;
+    const select = $('#eta-weather');
+    if (select && weather.weather && [...select.options].some((o) => o.value === weather.weather)) {
+      select.value = weather.weather;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (status) {
+      const temp = weather.temperatureC == null ? '' : ` · ${Math.round(weather.temperatureC)}°C`;
+      status.textContent = `${weather.live ? 'LIVE' : 'OFFLINE'} · ${weather.condition}${temp}`;
+      status.dataset.live = weather.live ? '1' : '0';
+      status.title = `Source: ${weather.source} · updated ${fmt.clock(weather.fetchedAt)}`;
+    }
+    return weather;
+  } catch (err) {
+    if (status) status.textContent = 'weather unavailable';
+    console.warn('[commuteiq] live weather failed', err);
+    return null;
+  }
+}
+
 // ── state ───────────────────────────────────────────────────────────────────
 
 /**
@@ -369,6 +396,7 @@ function wireModals() {
     $(btn)?.addEventListener('click', () => hideModal(modal));
   }
   $('#btn-help')?.addEventListener('click', () => showModal('#help-modal'));
+  $('#btn-weather')?.addEventListener('click', refreshLiveWeather);
 
   // Click the backdrop, not the card, to dismiss.
   for (const m of $$('.modal')) {
@@ -538,6 +566,7 @@ async function main() {
 
   try {
     await bootstrap();
+    refreshLiveWeather();
   } catch (err) {
     console.error('[commuteiq] boot failed', err);
     $('#scenario-beat').textContent = 'server unreachable — run: node server/index.js';

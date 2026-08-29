@@ -45,6 +45,7 @@ import { issuePass, verifyPass, listPasses } from './api/pass.js';
 import { getTelematics, ingestTelematics, listTelematics } from './api/telematics.js';
 import { listRoutes, getRoute, listStops } from './api/routes.js';
 import { scenarioState, scenarioControl } from './api/scenario.js';
+import { getLiveWeather } from './api/live.js';
 
 export { HttpError };
 
@@ -88,6 +89,7 @@ const ROUTES = [
   // Demo scenario driver
   ['GET',  '/api/v1/scenario',               scenarioState],
   ['POST', '/api/v1/scenario',               scenarioControl],
+  ['GET',  '/api/v1/live/weather',            async () => ({ success: true, weather: await getLiveWeather() })],
 ];
 
 /** @returns {{handler:Function, params:Record<string,string>}|null} */

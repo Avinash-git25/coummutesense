@@ -41,4 +41,16 @@ describe('health and HTTP safety', () => {
     assert.equal(response.body.success, false);
     assert.match(response.body.error, /no route/);
   });
+
+  it('exposes a stable live-weather contract with an offline fallback', async () => {
+    const response = await get(app, '/api/v1/live/weather');
+    assert.equal(response.status, 200);
+    assert.equal(response.body.success, true);
+    const weather = response.body.weather;
+    assert.equal(weather.location, 'Mumbai');
+    assert.equal(typeof weather.live, 'boolean');
+    assert.ok(['clear', 'cloudy', 'rain', 'heavy_rain'].includes(weather.weather));
+    assert.equal(typeof weather.source, 'string');
+    assert.equal(typeof weather.fetchedAt, 'string');
+  });
 });
